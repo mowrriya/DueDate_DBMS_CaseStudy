@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="page-heading heading-between">
+    <div><span class="eyebrow">YOUR PERSONAL SPACE</span><h1>Hey, {{ logged_in_user.name.split()[0] }} <span class="wave">✦</span></h1><p>Here's what's happening with your work.</p></div>
+    <a class="button button-primary" href="{{ url_for('assignment_new') }}">＋ Add assignment</a>
+</section>
+
+<section class="stat-grid">
+    <article class="stat-card stat-total"><div class="stat-label">All assignments <span>↗</span></div><div class="stat-value">{{ total }}</div><div class="stat-foot">Everything on your list</div></article>
+    <article class="stat-card stat-pending"><div class="stat-label">Pending <span>◷</span></div><div class="stat-value">{{ pending }}</div><div class="stat-foot">Still to be completed</div></article>
+    <article class="stat-card stat-overdue"><div class="stat-label">Overdue <span>!</span></div><div class="stat-value">{{ overdue }}</div><div class="stat-foot">Needs your attention</div></article>
+    <article class="stat-card stat-completed"><div class="stat-label">Completed <span>✓</span></div><div class="stat-value">{{ completed }}</div><div class="stat-foot">Nice work — keep going</div></article>
+</section>
+
+<section class="dashboard-grid">
+    <article class="panel progress-panel">
+        <div class="panel-heading"><div><span class="eyebrow">YOUR MOMENTUM</span><h2>Progress so far</h2></div><span class="round-icon">↗</span></div>
+        <div class="big-progress"><div class="progress-circle" style="--progress: {{ percent }};"><span>{{ percent }}<small>%</small></span></div><div><strong>{{ completed }} of {{ total }}</strong><p>assignments completed</p><small class="muted">{% if percent == 100 and total > 0 %}Everything on your list is complete!{% elif total == 0 %}Add your first assignment to get started.{% else %}Keep taking it one task at a time.{% endif %}</small></div></div>
+        <a class="text-link" href="{{ url_for('reports') }}">See detailed progress <span>→</span></a>
+    </article>
+    <article class="panel">
+        <div class="panel-heading"><div><span class="eyebrow">COMING UP</span><h2>Next deadlines</h2></div><a class="small-link" href="{{ url_for('assignments') }}">View all</a></div>
+        {% if upcoming %}
+            <div class="compact-list">
+            {% for item in upcoming %}
+                <div class="compact-item"><div class="date-chip"><b>{{ item.due_date.strftime('%d') }}</b><small>{{ item.due_date.strftime('%b') }}</small></div><div class="compact-main"><b>{{ item.title }}</b><small>{{ item.subject_name }}</small></div><span class="priority-dot priority-{{ item.priority|lower }}"></span></div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state small-empty"><div class="empty-icon">✦</div><b>Nothing coming up</b><p>Your upcoming deadlines will show here.</p></div>
+        {% endif %}
+    </article>
+</section>
+
+<section class="panel recent-panel">
+    <div class="panel-heading"><div><span class="eyebrow">RECENTLY ADDED</span><h2>Your latest assignments</h2></div><a class="small-link" href="{{ url_for('assignments') }}">Manage assignments →</a></div>
+    {% if recent %}
+    <div class="table-wrap"><table><thead><tr><th>Assignment</th><th>Subject</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>
+    {% for item in recent %}
+        <tr><td><strong>{{ item.title }}</strong><small class="cell-sub">{{ item.priority }} priority</small></td><td>{{ item.subject_name }}</td><td>{{ item.due_date|date_only }}</td><td><span class="status-pill status-{{ item|effective_status|lower }}">{{ item|effective_status }}</span></td><td><a class="row-link" href="{{ url_for('assignment_edit', assignment_id=item._id) }}">Edit</a></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    {% else %}
+        <div class="empty-state"><div class="empty-icon">＋</div><h3>Your list starts here</h3><p>Add your first assignment and we'll help you keep it organised.</p><a class="button button-primary" href="{{ url_for('assignment_new') }}">Add your first assignment</a></div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">MAKE IT MANAGEABLE</span><h1>{{ page_title }}</h1><p>Add the details now. You can always update them later.</p></section>
+<section class="form-layout">
+    <form method="post" class="panel assignment-form">
+        <div class="form-section-title"><span class="section-symbol">✎</span><div><h2>Assignment details</h2><p>Start with the essentials.</p></div></div>
+        <label>Assignment title <span class="required">*</span><input type="text" name="title" maxlength="140" placeholder="e.g. DBMS Assignment 2" required value="{{ request.form.get('title', item.title if item else '') }}"></label>
+        <label>Description <span class="optional">(optional)</span><textarea name="description" rows="4" placeholder="What do you need to do?">{{ request.form.get('description', item.description if item else '') }}</textarea></label>
+        <div class="form-two-col">
+            <label>Subject <span class="required">*</span><select name="subject_id" required><option value="">Choose a subject</option>{% for subject in subjects %}<option value="{{ subject._id }}" {% if request.form.get('subject_id', item.subject_id|string if item else '') == subject._id|string %}selected{% endif %}>{{ subject.name }}</option>{% endfor %}</select></label>
+            <label>Due date <span class="required">*</span><input type="date" name="due_date" required value="{{ request.form.get('due_date', item.due_date|date_only if item else '') }}"></label>
+        </div>
+        <div class="form-two-col">
+            <label>Priority<select name="priority">{% for value in ['Low', 'Medium', 'High'] %}<option value="{{ value }}" {% if request.form.get('priority', item.priority if item else 'Medium') == value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+            <label>Status<select name="status">{% for value in ['Pending', 'Completed'] %}<option value="{{ value }}" {% if request.form.get('status', item.status if item else 'Pending') == value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+        </div>
+        <label>Checklist <span class="optional">(optional · one item per line)</span><textarea name="checklist" rows="4" placeholder="Read the question&#10;Write the solution&#10;Review before submitting">{% if request.method == 'POST' %}{{ request.form.get('checklist', '') }}{% elif item %}{% for check in item.get('checklist', []) %}{{ check.text }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea><small>Keep small steps inside the assignment so nothing gets missed.</small></label>
+        <div class="form-actions"><a class="button button-quiet" href="{{ url_for('assignments') }}">Cancel</a><button class="button button-primary" type="submit">{{ 'Save changes' if item else 'Save assignment' }} <span>→</span></button></div>
+    </form>
+    <aside class="form-tip"><div class="tip-icon">✦</div><h3>A small tip</h3><p>Break a big assignment into a few simple checklist steps. It can make the next action feel easier to start.</p><div class="tip-line"></div><span class="eyebrow">YOUR SPACE</span><p class="muted">This assignment belongs to your account. Other users cannot edit or delete it.</p></aside>
+</section>
+{% endblock %}

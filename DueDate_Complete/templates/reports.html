@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My progress{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">LOOK HOW FAR YOU'VE COME</span><h1>My progress</h1><p>A simple picture of your workload, based only on your assignments.</p></section>
+<section class="report-summary">
+    <article class="report-highlight"><span class="eyebrow">COMPLETION RATE</span><div class="report-big">{{ percent }}<small>%</small></div><div class="report-track"><span style="width: {{ percent }}%"></span></div><p>{{ completed }} completed out of {{ total }} assignments</p></article>
+    <article class="report-note"><div class="note-icon">✦</div><h3>Progress over perfection.</h3><p>Every completed task is a step forward. Use this view to spot busy subjects and plan your time.</p></article>
+</section>
+<section class="report-grid">
+    <article class="panel report-panel"><div class="panel-heading"><div><span class="eyebrow">AT A GLANCE</span><h2>Assignment status</h2></div></div>
+        {% if status_stats %}
+            {% for stat in status_stats %}
+                <div class="bar-row"><div class="bar-label"><span>{{ stat._id }}</span><b>{{ stat.count }}</b></div><div class="bar-track"><span class="bar-{{ stat._id|lower }}" style="width: {{ (stat.count / total * 100) if total else 0 }}%"></span></div></div>
+            {% endfor %}
+        {% else %}<div class="empty-state small-empty"><p>Your status breakdown will appear once you add assignments.</p></div>{% endif %}
+    </article>
+    <article class="panel report-panel"><div class="panel-heading"><div><span class="eyebrow">WHERE YOUR TIME GOES</span><h2>By subject</h2></div></div>
+        {% if subject_stats %}
+            {% for stat in subject_stats %}
+                <div class="subject-report-row"><div><b>{{ stat._id or 'Other' }}</b><small>{{ stat.completed }} of {{ stat.total }} completed</small></div><span class="subject-count">{{ stat.total }}</span></div>
+            {% endfor %}
+        {% else %}<div class="empty-state small-empty"><p>Subject statistics will appear here.</p></div>{% endif %}
+    </article>
+</section>
+<div class="report-footnote"><span>ⓘ</span> These reports are generated from your own saved assignments using database aggregation.</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-aside">
+        <span class="eyebrow">A FRESH START</span>
+        <h1>Build a little<br>more breathing<br><span>room.</span></h1>
+        <p>Your own space to plan, prioritise and make progress.</p>
+    </div>
+    <div class="auth-card">
+        <h2>Create your account</h2>
+        <p class="muted">Start with the basics. Your assignments stay private to your account.</p>
+        <form method="post" class="form-stack">
+            <label>Full name<input type="text" name="name" maxlength="80" autocomplete="name" required value="{{ request.form.get('name', '') }}"></label>
+            <label>Email address<input type="email" name="email" autocomplete="email" required value="{{ request.form.get('email', '') }}"></label>
+            <label>Password<input type="password" name="password" minlength="8" autocomplete="new-password" required><small>At least 8 characters.</small></label>
+            <label>Confirm password<input type="password" name="confirm_password" minlength="8" autocomplete="new-password" required></label>
+            <button class="button button-primary button-full" type="submit">Create account <span>→</span></button>
+        </form>
+        <p class="auth-switch">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+    </div>
+</section>
+{% endblock %}

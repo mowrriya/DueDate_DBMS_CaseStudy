@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Plan your semester{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">YOUR PERSONAL STUDY SPACE</span>
+        <h1>Make room for<br><span>what matters.</span></h1>
+        <p>Keep assignments organised, stay ahead of deadlines and see your progress without the last-minute scramble.</p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{{ url_for('signup') }}">Get started <span>→</span></a>
+            <a class="button button-quiet" href="{{ url_for('login') }}">I already have an account</a>
+        </div>
+        <div class="hero-note"><span class="tiny-check">✓</span> Your tasks. Your pace. Your private workspace.</div>
+    </div>
+    <div class="hero-art" aria-label="Preview of a personal assignment dashboard">
+        <div class="mock-window">
+            <div class="mock-top"><span></span><span></span><span></span><small>MY WEEK</small></div>
+            <div class="mock-heading">A little progress adds up.</div>
+            <div class="mock-progress"><div><strong>68%</strong><small>completed this week</small></div><div class="progress-ring">✓</div></div>
+            <div class="mock-task"><span class="task-dot purple"></span><div><b>DBMS assignment</b><small>Database Systems · Today</small></div><span class="pill pill-high">High</span></div>
+            <div class="mock-task"><span class="task-dot orange"></span><div><b>Linked list practice</b><small>Data Structures · Tomorrow</small></div><span class="pill pill-medium">Medium</span></div>
+            <div class="mock-task done"><span class="done-check">✓</span><div><b>Python worksheet</b><small>Python Programming</small></div><span class="done-label">Done</span></div>
+            <div class="mock-bottom"><span>✦</span> One task at a time.</div>
+        </div>
+        <div class="float-card float-card-top"><span class="float-icon">↗</span><div><b>Stay on track</b><small>One clear next step</small></div></div>
+        <div class="float-card float-card-bottom"><span class="float-icon mint">✓</span><div><b>Small wins count</b><small>Progress you can see</small></div></div>
+    </div>
+</section>
+<section class="feature-row">
+    <div><span class="feature-number">01</span><h3>Keep it together</h3><p>Every assignment and deadline in one place.</p></div>
+    <div><span class="feature-number">02</span><h3>Know what's next</h3><p>See upcoming work before it sneaks up on you.</p></div>
+    <div><span class="feature-number">03</span><h3>Notice your progress</h3><p>Celebrate completed tasks and keep moving.</p></div>
+</section>
+{% endblock %}

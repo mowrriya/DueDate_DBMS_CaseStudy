@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}My assignments{% endblock %}
+{% block content %}
+<section class="page-heading heading-between">
+    <div><span class="eyebrow">YOUR WORKSPACE</span><h1>My assignments</h1><p>All your coursework, in one calm and organised place.</p></div>
+    <a class="button button-primary" href="{{ url_for('assignment_new') }}">＋ Add assignment</a>
+</section>
+
+<form class="filter-bar" method="get">
+    <div class="search-field"><span>⌕</span><input type="search" name="q" placeholder="Search assignments..." value="{{ search }}"></div>
+    <select name="subject" aria-label="Filter by subject"><option value="">All subjects</option>{% for subject in subjects %}<option value="{{ subject._id }}" {% if subject_filter == subject._id|string %}selected{% endif %}>{{ subject.name }}</option>{% endfor %}</select>
+    <select name="status" aria-label="Filter by status"><option value="">All statuses</option><option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option><option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option></select>
+    <select name="sort" aria-label="Sort assignments"><option value="due_date" {% if sort_by == 'due_date' %}selected{% endif %}>Nearest deadline</option><option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Recently added</option></select>
+    <button class="button button-dark" type="submit">Apply</button>
+</form>
+
+<section class="panel assignments-panel">
+    <div class="panel-heading"><div><h2>Your list <span class="count-bubble">{{ assignments|length }}</span></h2><p class="muted">Only you can access and manage these assignments.</p></div></div>
+    {% if assignments %}
+    <div class="table-wrap"><table><thead><tr><th>Assignment</th><th>Subject</th><th>Due date</th><th>Priority</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    {% for item in assignments %}
+        <tr>
+            <td>
+                <strong>{{ item.title }}</strong>
+                {% if item.description %}<small class="cell-sub">{{ item.description|truncate(70) }}</small>{% endif %}
+                {% if item.get('checklist') %}
+                <div class="assignment-checklist">
+                    <div class="checklist-progress">Checklist · {{ item.checklist|selectattr('done')|list|length }}/{{ item.checklist|length }} done</div>
+                    {% for check in item.checklist %}
+                    <form method="post" class="checklist-item-form" action="{{ url_for('checklist_toggle', assignment_id=item._id, check_index=loop.index0) }}">
+                        <label class="checklist-item {% if check.done %}is-done{% endif %}">
+                            <input type="checkbox" {% if check.done %}checked{% endif %} onchange="this.form.submit()" aria-label="Mark {{ check.text }} as {% if check.done %}not done{% else %}done{% endif %}">
+                            <span>{{ check.text }}</span>
+                        </label>
+                    </form>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </td>
+            <td>{{ item.subject_name }}</td><td>{{ item.due_date|date_only }}</td>
+            <td><span class="priority-label priority-text-{{ item.priority|lower }}">{{ item.priority }}</span></td>
+            <td><span class="status-pill status-{{ item.effective_status|lower }}">{{ item.effective_status }}</span></td>
+            <td><div class="action-group">
+                <a class="icon-action" title="Edit assignment" href="{{ url_for('assignment_edit', assignment_id=item._id) }}">Edit</a>
+                <form method="post" action="{{ url_for('assignment_complete', assignment_id=item._id) }}"><button class="icon-action" type="submit">{{ 'Reopen' if item.status == 'Completed' else 'Complete' }}</button></form>
+                <form method="post" action="{{ url_for('assignment_delete', assignment_id=item._id) }}" data-confirm="Delete this assignment permanently?"><button class="icon-action danger-action" type="submit">Delete</button></form>
+            </div></td>
+        </tr>
+    {% endfor %}
+    </tbody></table></div>
+    {% else %}
+    <div class="empty-state"><div class="empty-icon">⌕</div><h3>No assignments found</h3><p>Try changing your filters or add a new assignment.</p><a class="button button-primary" href="{{ url_for('assignment_new') }}">Add assignment</a></div>
+    {% endif %}
+</section>
+{% endblock %}

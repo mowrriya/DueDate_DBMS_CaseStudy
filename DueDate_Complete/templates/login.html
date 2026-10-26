@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-aside">
+        <span class="eyebrow">WELCOME BACK</span>
+        <h1>Your next step<br>is waiting<br><span>for you.</span></h1>
+        <p>Pick up where you left off and keep your semester moving.</p>
+    </div>
+    <div class="auth-card">
+        <h2>Log in</h2>
+        <p class="muted">Enter your account details to open your personal workspace.</p>
+        <form method="post" class="form-stack">
+            <label>Email address<input type="email" name="email" autocomplete="email" required value="{{ request.form.get('email', '') }}"></label>
+            <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+            <button class="button button-primary button-full" type="submit">Log in <span>→</span></button>
+        </form>
+        <p class="auth-switch">New to DueDate? <a href="{{ url_for('signup') }}">Create an account</a></p>
+    </div>
+</section>
+{% endblock %}
